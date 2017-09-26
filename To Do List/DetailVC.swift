@@ -11,14 +11,40 @@ import UIKit
 class DetailVC: UIViewController {
 
     @IBOutlet weak var toDoField: UITextField!
-    
+    @IBOutlet weak var saveButton: UIBarButtonItem!
+    var toDoItem:String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        if let toDoItem = toDoItem {
+            toDoField.text = toDoItem
+        }
+        toDoField.becomeFirstResponder()
+        enableDisableSaveButton()
     }
 
+    //When you press save, the text that you entered becomes the updated ToDoItem.
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "UnwindFromSave" {
+            toDoItem = toDoField.text
+        }
+    }
+    
+
+    @IBAction func toDoFieldChanged(_sender: UITextField) {
+        enableDisableSaveButton()
+    }
+    
+    //Disable save if there's nothing there.
+    func enableDisableSaveButton() {
+        if let toDoFieldCount = toDoField.text?.count, toDoFieldCount > 0 {
+            saveButton.isEnabled = true
+        }else{
+            saveButton.isEnabled = false
+        }
+    }
+    
+    //If you press cancel, dismiss the view without doing anything to do the data.
     @IBAction func cancelPressed(_ sender: UIBarButtonItem) {
         let isPresentingInAddMode = presentingViewController is UINavigationController
         if isPresentingInAddMode {
@@ -29,6 +55,7 @@ class DetailVC: UIViewController {
             navigationController?.popViewController(animated: true)
         }
     }
+        
     
 
     /*

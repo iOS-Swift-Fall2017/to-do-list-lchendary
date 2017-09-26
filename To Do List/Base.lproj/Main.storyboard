@@ -29,9 +29,10 @@
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="h1U-nq-RAh">
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="h1U-nq-RAh" id="uFK-7k-KqL">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.5" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="h1U-nq-RAh" id="uFK-7k-KqL">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" red="0.79563219956811793" green="0.73562899782594382" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </tableViewCellContentView>
                                         <color key="tintColor" red="1" green="0.0" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
@@ -45,7 +46,11 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" title="To Do List" id="Nxu-fw-XEq">
-                        <barButtonItem key="leftBarButtonItem" title="Edit" id="Key-oF-qvq"/>
+                        <barButtonItem key="leftBarButtonItem" title="Edit" id="Key-oF-qvq">
+                            <connections>
+                                <action selector="editBarButtonPressed:" destination="BYZ-38-t0r" id="nGX-9w-kY8"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="49W-I2-oji">
                             <connections>
                                 <segue destination="KRu-Jk-LBN" kind="presentation" identifier="AddItem" id="yba-Tl-0xH"/>
@@ -86,7 +91,10 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" enablesReturnKeyAutomatically="YES"/>
+                                <connections>
+                                    <action selector="toDoFieldChangedWith_sender:" destination="yLK-a3-nK8" eventType="editingChanged" id="roH-Xq-FQ6"/>
+                                </connections>
                             </textField>
                         </subviews>
                         <color key="backgroundColor" red="0.63610537830000002" green="0.44440821629999999" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -98,13 +106,19 @@
                                 <action selector="cancelPressed:" destination="yLK-a3-nK8" id="eQk-dM-Qb5"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Save" id="NEH-se-twn"/>
+                        <barButtonItem key="rightBarButtonItem" title="Save" id="NEH-se-twn">
+                            <connections>
+                                <segue destination="fi9-qH-68h" kind="unwind" identifier="UnwindFromSave" unwindAction="unwindFromDetailVCWithSegue:" id="PKz-g3-JyC"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="saveButton" destination="NEH-se-twn" id="OgO-3R-LWI"/>
                         <outlet property="toDoField" destination="1mC-k2-YXa" id="Ze1-Vv-1kB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OA9-HA-YMo" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="fi9-qH-68h" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2866.4000000000001" y="132.68365817091455"/>
         </scene>

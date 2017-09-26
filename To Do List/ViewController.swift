@@ -32,6 +32,7 @@ class ViewController: UIViewController {
         let backgroundImage = UIImage(named: "MacDaddy Background_Purple")
         let imageView = UIImageView(image: backgroundImage)
         self.tableView.backgroundView = imageView
+        
     }
     
     
@@ -107,6 +108,10 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         cell.textLabel?.text = toDoArray[indexPath.row]
         cell.detailTextLabel?.text = notesArray[indexPath.row]
+        
+        cell.textLabel?.textColor = UIColor.white
+        cell.backgroundColor = .clear
+        
         return cell
     }
     

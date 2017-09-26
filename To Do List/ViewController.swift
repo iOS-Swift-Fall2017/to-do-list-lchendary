@@ -14,7 +14,10 @@ class ViewController: UIViewController {
     @IBOutlet weak var editBarButton: UIBarButtonItem!
     @IBOutlet weak var addBarButton: UIBarButtonItem!
     
-    var toDoArray = ["Learn Swift", "Build Apps", "Change the World"]
+    var defaultsData = UserDefaults.standard
+    
+    var toDoArray = [String]()
+    var notesArray = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,11 +25,21 @@ class ViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         
+        toDoArray = defaultsData.stringArray(forKey: "toDoArray") ?? [String]()
+        notesArray = defaultsData.stringArray(forKey: "notesArray") ?? [String]()
+        
+        
         let backgroundImage = UIImage(named: "MacDaddy Background_Purple")
         let imageView = UIImageView(image: backgroundImage)
         self.tableView.backgroundView = imageView
     }
     
+    
+    func saveDefaultsData() {
+        //Save user defaults.
+        defaultsData.set(toDoArray, forKey: "toDoArray")
+        defaultsData.set(notesArray, forKey: "notesArray")
+    }
     
     //What happens when you want to add or edit an item?
     override func prepare(for segue: UIStoryboardSegue, sender: Any?){
@@ -35,6 +48,7 @@ class ViewController: UIViewController {
             let destination = segue.destination as! DetailVC
             let index = tableView.indexPathForSelectedRow!.row
             destination.toDoItem = toDoArray[index]
+            destination.note = notesArray[index]
         }else{
         //If we're making a new item, we must deselect any previous selections that were made.
             if let selectedPath = tableView.indexPathForSelectedRow {
@@ -50,13 +64,18 @@ class ViewController: UIViewController {
         //If you were editing an old item, update the data in the array and reload the rows.
         if let indexPath = tableView.indexPathForSelectedRow{
             toDoArray[indexPath.row] = sourceViewController.toDoItem!
+            notesArray[indexPath.row] = sourceViewController.note!
             tableView.reloadRows(at: [indexPath], with: .automatic)
         }else{
         //If you were creating a new item, add the new item to the array.
             let newIndexPath = IndexPath(row: toDoArray.count, section: 0)
             toDoArray.append(sourceViewController.toDoItem!)
+            notesArray.append(sourceViewController.note!)
             tableView.insertRows(at: [newIndexPath], with: .automatic)
         }
+        
+        saveDefaultsData()
+        
     }
     
     @IBAction func editBarButtonPressed(_ sender: UIBarButtonItem) {
@@ -87,21 +106,20 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         cell.textLabel?.text = toDoArray[indexPath.row]
+        cell.detailTextLabel?.text = notesArray[indexPath.row]
         return cell
     }
     
-    //Make the cells transparent.
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        //cell.backgroundColor = UIColor(white:0, alpha: 0)
-        //cell.textLabel?.textColor = UIColor.white
-    }
     
     //Deleting stuff.
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             toDoArray.remove(at: indexPath.row)
+            notesArray.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
+            saveDefaultsData()
         }
+        
     }
     
     //Moving stuff.
@@ -110,6 +128,12 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         let itemToMove = toDoArray[sourceIndexPath.row]
         toDoArray.remove(at: sourceIndexPath.row)
         toDoArray.insert(itemToMove, at: destinationIndexPath.row)
+        
+        let noteToMove = notesArray[sourceIndexPath.row]
+        notesArray.remove(at: sourceIndexPath.row)
+        notesArray.insert(noteToMove, at: destinationIndexPath.row)
+        
+        saveDefaultsData()
     }
     
 }
